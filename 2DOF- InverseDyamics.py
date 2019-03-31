@@ -79,6 +79,7 @@ def inverse_dynamics(x, t, a1_link, a2_link):
 if __name__ == '__main__':
 
     x0 = np.array([50, 60, 0.5, 0.3])
+    x1 = np.array([30, 50, 0.3, 0.4])
     xf = np.array([2, 1, 2, 4])
     tf = 15
     th1_i = x0[0]
@@ -98,8 +99,9 @@ if __name__ == '__main__':
     t = np.linspace(0, 15, num=1501)
     y0 = x0
     sol = odeint(inverse_dynamics, y0, t, args=(link1, link2))
-    plt.plot(t, sol[:, 0], 'b', label='Theta_1 under inverse dynamic control')
-    plt.plot(t, sol[:, 1], 'g', label='Theta_2 under inverse dynamic control')
+    sol2 = odeint(inverse_dynamics, x1, t, args=(link1, link2))
+    plt.plot(t, sol[:, 0], 'b', t, sol2[:, 0], 'y', label='Theta_1 under inverse dynamic control')
+    plt.plot(t, sol[:, 1], 'g', t, sol2[:, 1], 'r', label='Theta_2 under inverse dynamic control')
     plt.legend(loc='best')
     plt.xlabel('t')
     plt.grid()
