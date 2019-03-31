@@ -36,7 +36,6 @@ def inverse_dynamics(x, t, a1_link, a2_link):
     Cmat = np.array([[-b * math.sin(x[1]) * x[3], -b * math.sin(x[1]) * x[2] + x[1]], [b * math.sin(x[1]) * x[2], 0]])
     Gmat = np.array([[m1 * g * r1 * math.cos(x[0]) + m2 * g * (l1 * math.cos(x[0]) + r2 * math.cos(x[0] + x[1]))], [m2 * g * r2 * math.cos(x[0] + x[1])]])
     invM = inv(Mmat)
-    invMC = np.dot(invM, Cmat)
 
     vec_t = np.array([[1, t, t**2, t**3]])
     print "vect is ", vec_t
@@ -68,16 +67,11 @@ def inverse_dynamics(x, t, a1_link, a2_link):
     dim = 4  # number of entries
     shp = (dim, 1)  # shape tuple
     dx = np.zeros(shp)
-    print "dx is ", dx
+    # print "dx is ", dx
 
-    z = Umat
-    # print "z is ", z
     dx_temp = np.dot(inv(Mmat), (Umat - np.dot(Cmat, dtheta) - Gmat))
-    print "dx temp is ", dx_temp[0][0]
-    # dx[0] = x[2]
-    # dx[1] = x[3]
-    # dx[2] = dx_temp[0]
-    # dx[3] = dx_temp[1]
+    # print "dx temp is ", dx_temp[0][0]
+
     dx = [x[2], x[3], dx_temp[0][0], dx_temp[1][0]]
     print " dx is ", dx
     return dx
@@ -104,8 +98,8 @@ if __name__ == '__main__':
     t = np.linspace(0, 15, num=1501)
     y0 = x0
     sol = odeint(inverse_dynamics, y0, t, args=(link1, link2))
-    plt.plot(t, sol[:, 0], 'b', label='theta(t)')
-    plt.plot(t, sol[:, 1], 'g', label='omega(t)')
+    plt.plot(t, sol[:, 0], 'b', label='Theta_1 under inverse dynamic control')
+    plt.plot(t, sol[:, 1], 'g', label='Theta_2 under inverse dynamic control')
     plt.legend(loc='best')
     plt.xlabel('t')
     plt.grid()
